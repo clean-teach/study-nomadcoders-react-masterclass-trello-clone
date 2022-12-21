@@ -14,13 +14,23 @@ function App() {
         <h2>Drag and Drop</h2>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="one">
-            {() => (
-              <ul>
+            {(magic) => (
+              <ul ref={magic.innerRef} {...magic.droppableProps}>
                 <Draggable draggableId="one" index={0}>
-                  {() => <li>One</li>}
+                  {(magic) => (
+                    <li ref={magic.innerRef} {...magic.draggableProps}>
+                      <span {...magic.dragHandleProps}>🔥</span>
+                      One
+                    </li>
+                  )}
                 </Draggable>
                 <Draggable draggableId="two" index={1}>
-                  {() => <li>Two</li>}
+                  {(magic) => (
+                    <li ref={magic.innerRef} {...magic.draggableProps}>
+                      <span {...magic.dragHandleProps}>🔥</span>
+                      Two
+                    </li>
+                  )}
                 </Draggable>
               </ul>
             )}
