@@ -1,6 +1,13 @@
 import PracticeSelector from './Components/PracticeSelector';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { toDoState } from './atoms';
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,10 +40,13 @@ const Card = styled.div`
   background-color: ${(props) => props.theme.cardColor};
 `;
 
-const toDos = ['a', 'b', 'c', 'd', 'e', 'f'];
-
 function App() {
-  const onDragEnd = () => {};
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  // const onDragEnd = (args: DropResult) => {
+  //   console.log(args);
+  const onDragEnd = ({ destination, source }: DropResult) => {
+    console.log(destination, source);
+  };
 
   return (
     <>
@@ -53,8 +63,7 @@ function App() {
                 {(magic) => (
                   <Board ref={magic.innerRef} {...magic.droppableProps}>
                     {toDos.map((toDo, index) => (
-                      <Draggable draggableId={toDo} index={index}>
-                        {/* <Draggable draggableId={toDo} index={index} key={index}> */}
+                      <Draggable draggableId={toDo} index={index} key={index}>
                         {(magic) => (
                           <Card
                             ref={magic.innerRef}
