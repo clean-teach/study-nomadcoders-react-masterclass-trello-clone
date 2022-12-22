@@ -44,8 +44,22 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   // const onDragEnd = (args: DropResult) => {
   //   console.log(args);
-  const onDragEnd = ({ destination, source }: DropResult) => {
-    console.log(destination, source);
+  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const toDosCopy = [...oldToDos];
+      // 1) Delete item on source.index
+      console.log('Delete item on', source.index);
+      console.log(toDosCopy);
+      toDosCopy.splice(source.index, 1);
+      console.log('Deleted item');
+      console.log(toDosCopy);
+      // 2) Put back the item on the destination.index
+      console.log('Put back', draggableId, 'on ', destination.index);
+      toDosCopy.splice(destination?.index, 0, draggableId);
+      console.log(toDosCopy);
+      return toDosCopy;
+    });
   };
 
   return (
@@ -63,7 +77,7 @@ function App() {
                 {(magic) => (
                   <Board ref={magic.innerRef} {...magic.droppableProps}>
                     {toDos.map((toDo, index) => (
-                      <Draggable draggableId={toDo} index={index} key={index}>
+                      <Draggable draggableId={toDo} index={index} key={toDo}>
                         {(magic) => (
                           <Card
                             ref={magic.innerRef}
