@@ -22,8 +22,13 @@ export interface ITodo {
   id: number;
   text: string;
 }
-interface IToDoState {
-  [key: string]: ITodo[];
+export interface IBoard {
+  id: number;
+  title: string;
+  todos: ITodo[];
+}
+interface IBoards {
+  [key: string]: IBoard[];
 }
 
 const { persistAtom } = recoilPersist({
@@ -31,13 +36,31 @@ const { persistAtom } = recoilPersist({
   storage: localStorage,
 });
 
-export const toDoState = atom<IToDoState>({
-  key: 'toDo',
+export const toDoBoardState = atom<IBoards>({
+  key: 'board',
   default: {
-    'To Do': [],
-    Doing: [],
-    Done: [],
-    'Do Later': [],
+    boards: [
+      {
+        id: 1,
+        title: 'To Do',
+        todos: [],
+      },
+      {
+        id: 2,
+        title: 'Doing',
+        todos: [],
+      },
+      {
+        id: 3,
+        title: 'Done',
+        todos: [],
+      },
+      {
+        id: 4,
+        title: 'Do Later',
+        todos: [],
+      },
+    ],
   },
   effects_UNSTABLE: [persistAtom],
 });

@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form';
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
-import { ITodo, toDoState } from '../../atoms';
-import { useSetRecoilState } from 'recoil';
+import { IBoard, toDoBoardState } from '../../atoms';
+import { useRecoilState } from 'recoil';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -59,26 +59,41 @@ const Form = styled.form`
 `;
 
 interface IBoardProps {
-  toDos: ITodo[];
-  boardId: string;
+  currentBoard: IBoard;
 }
 
 interface IForm {
   toDo: string;
 }
 
-function Board({ toDos, boardId }: IBoardProps) {
-  const setToDos = useSetRecoilState(toDoState);
+function Board({ currentBoard }: IBoardProps) {
+  const [toDoBoards, setToDoBoards] = useRecoilState(toDoBoardState);
   const { register, setValue, handleSubmit } = useForm<IForm>();
-  const onValid = ({ toDo }: IForm) => {
+  const handleCreateTodo = ({ toDo }: IForm) => {
+    const { boards } = toDoBoards;
     const newToDo = {
       id: Date.now(),
       text: toDo,
     };
-    setToDos((allBoard) => {
+    const currentBoardOldToDo = boards.find(
+      (board) => board.id === currentBoard.id,
+    )?.todos;
+    if (!currentBoardOldToDo) {
+      console.log('등록된 보드가 없습니다.');
+      return;
+    }
+    console.log(currentBoard);
+    console.log(currentBoardOldToDo);
+    setToDoBoards((oldBoards) => {
       return {
-        ...allBoard,
-        [boardId]: [...allBoard[boardId], newToDo],
+        boards: [
+          ...oldBoards.boards,
+          {
+            id: currentBoard.id,
+            title: currentBoard.title,
+            todos: [...currentBoardOldToDo, newToDo],
+          },
+        ],
       };
     });
     setValue('toDo', '');
@@ -86,15 +101,15 @@ function Board({ toDos, boardId }: IBoardProps) {
 
   return (
     <Wrapper>
-      <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
+      <Title>{currentBoard.title}</Title>
+      <Form onSubmit={handleSubmit(handleCreateTodo)}>
         <input
           {...register('toDo', { required: true })}
           type="text"
-          placeholder={`Add task on ${boardId}`}
+          placeholder={`Add task on ${currentBoard.title}`}
         />
       </Form>
-      <Droppable droppableId={boardId}>
+      <Droppable droppableId={currentBoard.title}>
         {(magic, info) => (
           <Area
             isDraggingOver={info.isDraggingOver}
@@ -102,7 +117,7 @@ function Board({ toDos, boardId }: IBoardProps) {
             ref={magic.innerRef}
             {...magic.droppableProps}
           >
-            {toDos.map((toDo, index) => (
+            {currentBoard.todos.map((toDo, index) => (
               <DragabbleCard
                 key={toDo.id}
                 index={index}
