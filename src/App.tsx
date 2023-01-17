@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import PracticeSelector from './Components/PracticeSelector';
-import ReactBeautifulDndArea from './Components/react-beautiful-dnd/ReactBeautifulDndArea';
+import PracticeSelector from './practiceSelector/components/PracticeSelector';
+import ReactBeautifulDndArea from './reactBeautifulDnd/components/ReactBeautifulDndArea';
 
 const Wrapper = styled.div`
   & > div + div {

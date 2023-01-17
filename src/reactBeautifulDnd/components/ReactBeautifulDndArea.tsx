@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
-import { toDoBoardState } from '../../atoms';
+import { toDoBoardState } from '../atoms/atoms';
 import Board from './Board';
 import CreateBoardFrom from './CreateBoardFrom';
 import DeleteCardArea from './DeleteCardArea';

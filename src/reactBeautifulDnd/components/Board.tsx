@@ -1,9 +1,8 @@
-import { useForm } from 'react-hook-form';
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
-import { IBoard, toDoBoardState } from '../../atoms';
-import { useRecoilState } from 'recoil';
+import { IBoard } from '../atoms/atoms';
+import CreateCardForm from './CreateCardForm';
 
 const Wrapper = styled.div`
   width: 300px;
@@ -40,75 +39,15 @@ const Area = styled.div<IAreaProps>`
   padding: 20px;
 `;
 
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 10px;
-  input {
-    width: 100%;
-    font-size: 16px;
-    border: 0;
-    background-color: white;
-    width: 80%;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    margin: 0 auto;
-  }
-`;
-
 interface IBoardProps {
   currentBoard: IBoard;
 }
 
-interface IForm {
-  toDo: string;
-}
-
 function Board({ currentBoard }: IBoardProps) {
-  const [toDoBoards, setToDoBoards] = useRecoilState(toDoBoardState);
-  const { register, setValue, handleSubmit } = useForm<IForm>();
-  const handleCreateTodo = ({ toDo }: IForm) => {
-    const { boards } = toDoBoards;
-    const newToDo = {
-      id: Date.now(),
-      text: toDo,
-    };
-    const currentBoardOldToDo = boards.find(
-      (board) => board.id === currentBoard.id,
-    )?.todos;
-    if (!currentBoardOldToDo) {
-      console.log('등록된 보드가 없습니다.');
-      return;
-    }
-    console.log(currentBoard);
-    console.log(currentBoardOldToDo);
-    setToDoBoards((oldBoards) => {
-      return {
-        boards: [
-          ...oldBoards.boards,
-          {
-            id: currentBoard.id,
-            title: currentBoard.title,
-            todos: [...currentBoardOldToDo, newToDo],
-          },
-        ],
-      };
-    });
-    setValue('toDo', '');
-  };
-
   return (
     <Wrapper>
       <Title>{currentBoard.title}</Title>
-      <Form onSubmit={handleSubmit(handleCreateTodo)}>
-        <input
-          {...register('toDo', { required: true })}
-          type="text"
-          placeholder={`Add task on ${currentBoard.title}`}
-        />
-      </Form>
+      <CreateCardForm currentBoard={currentBoard} />
       <Droppable droppableId={currentBoard.title}>
         {(magic, info) => (
           <Area
