@@ -3,6 +3,9 @@ import PracticeSelector from './practiceSelector/components/PracticeSelector';
 import ReactBeautifulDndArea from './reactBeautifulDnd/components/ReactBeautifulDndArea';
 
 const Wrapper = styled.div`
+  & > div {
+    padding: 2rem;
+  }
   & > div + div {
     border-top: 1px solid #cccccc;
   }
@@ -10,6 +13,7 @@ const Wrapper = styled.div`
     font-size: 2rem;
     font-weight: bold;
     text-align: center;
+    padding: 1rem 0 2rem;
   }
 `;
 

@@ -15,7 +15,6 @@ const Wrapper = styled.div`
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   gap: 10px;
 `;
 
@@ -23,8 +22,10 @@ const Boards = styled.div`
   width: 100%;
   gap: 10px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  & > * {
+    flex: 40%;
+  }
 `;
 
 function ReactBeautifulDndArea() {

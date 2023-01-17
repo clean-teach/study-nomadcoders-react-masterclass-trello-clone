@@ -5,7 +5,6 @@ import { IBoard } from '../atoms/atoms';
 import CreateCardForm from './CreateCardForm';
 
 const Wrapper = styled.div`
-  width: 300px;
   padding-top: 10px;
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;

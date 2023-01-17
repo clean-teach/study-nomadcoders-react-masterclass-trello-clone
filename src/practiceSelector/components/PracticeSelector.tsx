@@ -14,6 +14,7 @@ function PracticeSelector() {
 
   return (
     <>
+      <p>시와 분을 변환하는 기능</p>
       <input
         value={minutes}
         onChange={onMinuteChange}
