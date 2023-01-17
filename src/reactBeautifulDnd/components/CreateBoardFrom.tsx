@@ -1,6 +1,7 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { toDoBoardState } from '../atoms/atoms';
 
 const Form = styled.form`
   width: 100%;
@@ -20,20 +21,32 @@ const Form = styled.form`
 `;
 
 interface IForm {
-  board: string;
+  boardTitle: string;
 }
 
 function CreateBoardFrom() {
+  const setTodoBoards = useSetRecoilState(toDoBoardState);
   const { register, setValue, handleSubmit } = useForm<IForm>();
 
-  const handleCreateBoard = ({ board }: IForm) => {
-    console.log(board);
+  const handleCreateBoard = ({ boardTitle }: IForm) => {
+    const newBoard = {
+      id: Date.now(),
+      title: boardTitle,
+      todos: [],
+    };
+    setTodoBoards((oldBoards) => {
+      const newBoards = oldBoards.boards.concat(newBoard);
+      return {
+        boards: newBoards,
+      };
+    });
+    setValue('boardTitle', '');
   };
 
   return (
     <Form onSubmit={handleSubmit(handleCreateBoard)}>
       <input
-        {...register('board')}
+        {...register('boardTitle')}
         type="text"
         placeholder="추가 할 보드의 이름을 입력해 주세요"
       />
