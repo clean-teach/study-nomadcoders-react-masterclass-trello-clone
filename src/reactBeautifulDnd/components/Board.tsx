@@ -1,8 +1,9 @@
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
-import { IBoard } from '../atoms/atoms';
+import { IBoard, toDoBoardState } from '../atoms/atoms';
 import CreateCardForm from './CreateCardForm';
+import { useSetRecoilState } from 'recoil';
 
 const Wrapper = styled.div`
   padding-top: 10px;
@@ -12,6 +13,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 `;
 
 const Title = styled.h2`
@@ -19,6 +21,12 @@ const Title = styled.h2`
   font-weight: 600;
   margin-bottom: 10px;
   font-size: 18px;
+`;
+
+const ButtonDelete = styled.button`
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
 `;
 
 interface IAreaProps {
@@ -43,9 +51,28 @@ interface IBoardProps {
 }
 
 function Board({ currentBoard }: IBoardProps) {
+  const setTodoBoards = useSetRecoilState(toDoBoardState);
+  const handleDeleteBoard = () => {
+    if (
+      window.confirm(
+        '보드를 삭제하시면, 포함된 할 일도 삭제됩니다. 정말 삭제 하시겠습니까?',
+      )
+    ) {
+      setTodoBoards((oldBoards) => {
+        const newBoards = oldBoards.boards.filter(
+          (board) => board.id !== currentBoard.id,
+        );
+        return {
+          boards: newBoards,
+        };
+      });
+    }
+  };
+
   return (
     <Wrapper>
       <Title>{currentBoard.title}</Title>
+      <ButtonDelete onClick={handleDeleteBoard}>❌</ButtonDelete>
       <CreateCardForm currentBoard={currentBoard} />
       <Droppable droppableId={currentBoard.title}>
         {(magic, info) => (

@@ -28,7 +28,7 @@ function DragabbleCard({
   currentBoard,
 }: IDragabbleCardProps) {
   const setTodoBoard = useSetRecoilState(toDoBoardState);
-  const handleDelete = () => {
+  const handleDeleteCard = () => {
     if (window.confirm('정말 삭제 하시겠습니까?')) {
       setTodoBoard((oldTodos) => {
         const newTodos = currentBoard.todos.filter(
@@ -60,7 +60,7 @@ function DragabbleCard({
           {...magic.draggableProps}
         >
           {toDoText}
-          <button onClick={handleDelete}>❌</button>
+          <button onClick={handleDeleteCard}>❌</button>
         </Card>
       )}
     </Draggable>
