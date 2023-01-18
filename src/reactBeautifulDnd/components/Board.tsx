@@ -1,9 +1,10 @@
-import { Droppable } from 'react-beautiful-dnd';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
-import { IBoard, toDoBoardState } from '../atoms/atoms';
+import { toDoBoardState } from '../atoms/atoms';
 import CreateCardForm from './CreateCardForm';
 import { useSetRecoilState } from 'recoil';
+import { IAreaProps, IBoard } from '../types/types';
 
 const Wrapper = styled.div`
   padding-top: 10px;
@@ -29,11 +30,6 @@ const ButtonDelete = styled.button`
   top: 1rem;
 `;
 
-interface IAreaProps {
-  isDraggingFromThis: boolean;
-  isDraggingOver: boolean;
-}
-
 const Area = styled.div<IAreaProps>`
   background-color: ${(props) =>
     props.isDraggingOver
@@ -48,9 +44,10 @@ const Area = styled.div<IAreaProps>`
 
 interface IBoardProps {
   currentBoard: IBoard;
+  index: number;
 }
 
-function Board({ currentBoard }: IBoardProps) {
+function Board({ currentBoard, index }: IBoardProps) {
   const setTodoBoards = useSetRecoilState(toDoBoardState);
   const handleDeleteBoard = () => {
     if (
@@ -70,32 +67,40 @@ function Board({ currentBoard }: IBoardProps) {
   };
 
   return (
-    <Wrapper>
-      <Title>{currentBoard.title}</Title>
-      <ButtonDelete onClick={handleDeleteBoard}>❌</ButtonDelete>
-      <CreateCardForm currentBoard={currentBoard} />
-      <Droppable droppableId={currentBoard.title}>
-        {(magic, info) => (
-          <Area
-            isDraggingOver={info.isDraggingOver}
-            isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-            ref={magic.innerRef}
-            {...magic.droppableProps}
-          >
-            {currentBoard.todos.map((toDo, index) => (
-              <DragabbleCard
-                key={toDo.id}
-                index={index}
-                toDoId={toDo.id}
-                toDoText={toDo.text}
-                currentBoard={currentBoard}
-              />
-            ))}
-            {magic.placeholder}
-          </Area>
-        )}
-      </Droppable>
-    </Wrapper>
+    <Draggable draggableId={currentBoard.id + ''} index={index}>
+      {(magic, snapshot) => (
+        <Wrapper
+          ref={magic.innerRef}
+          {...magic.dragHandleProps}
+          {...magic.draggableProps}
+        >
+          <Title>{currentBoard.title}</Title>
+          <ButtonDelete onClick={handleDeleteBoard}>❌</ButtonDelete>
+          <CreateCardForm currentBoard={currentBoard} />
+          <Droppable droppableId={currentBoard.title}>
+            {(magic, info) => (
+              <Area
+                isDraggingOver={info.isDraggingOver}
+                isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                ref={magic.innerRef}
+                {...magic.droppableProps}
+              >
+                {currentBoard.todos.map((toDo, index) => (
+                  <DragabbleCard
+                    key={toDo.id}
+                    index={index}
+                    toDoId={toDo.id}
+                    toDoText={toDo.text}
+                    currentBoard={currentBoard}
+                  />
+                ))}
+                {magic.placeholder}
+              </Area>
+            )}
+          </Droppable>
+        </Wrapper>
+      )}
+    </Draggable>
   );
 }
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { IBoard, toDoBoardState } from '../atoms/atoms';
+import { toDoBoardState } from '../atoms/atoms';
+import { IBoard } from '../types/types';
 
 const Card = styled.div<{ isDragging: boolean }>`
   border-radius: 5px;

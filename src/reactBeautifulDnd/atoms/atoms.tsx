@@ -1,18 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-
-export interface ITodo {
-  id: number;
-  text: string;
-}
-export interface IBoard {
-  id: number;
-  title: string;
-  todos: ITodo[];
-}
-export interface IBoards {
-  [key: string]: IBoard[];
-}
+import { IBoards } from '../types/types';
 
 const { persistAtom } = recoilPersist({
   key: 'trelloCloneTodos',

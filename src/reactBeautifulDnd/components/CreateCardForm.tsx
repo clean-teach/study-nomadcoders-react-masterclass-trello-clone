@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { IBoard, toDoBoardState } from '../atoms/atoms';
+import { toDoBoardState } from '../atoms/atoms';
+import { IBoard } from '../types/types';
 
 const Form = styled.form`
   width: 100%;
