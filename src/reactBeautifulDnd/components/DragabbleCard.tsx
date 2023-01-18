@@ -31,20 +31,20 @@ function DragabbleCard({
   const handleDeleteCard = () => {
     if (window.confirm('정말 삭제 하시겠습니까?')) {
       setTodoBoard((oldTodos) => {
-        const newTodos = currentBoard.todos.filter(
+        const todosCopy = currentBoard.todos.filter(
           (todo) => todo.id !== toDoId,
         );
-        const newBoards = oldTodos.boards.map((board) =>
+        const boardsCopy = oldTodos.boards.map((board) =>
           board.id === currentBoard.id
             ? {
                 id: currentBoard.id,
                 title: currentBoard.title,
-                todos: newTodos,
+                todos: todosCopy,
               }
             : board,
         );
         return {
-          boards: newBoards,
+          boards: boardsCopy,
         };
       });
     }

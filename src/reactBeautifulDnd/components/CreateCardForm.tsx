@@ -37,17 +37,17 @@ function CreateCardForm({ currentBoard }: IBoardProps) {
       id: Date.now(),
       text: toDo,
     };
-    const newBoard = {
+    const boardCopy = {
       ...currentBoard,
       todos: currentBoard.todos.concat(newToDo),
     };
 
     setToDoBoards((oldBoards) => {
-      const newBoards = oldBoards.boards.map((board) =>
-        board.id === currentBoard.id ? newBoard : board,
+      const boardsCopy = oldBoards.boards.map((board) =>
+        board.id === currentBoard.id ? boardCopy : board,
       );
       return {
-        boards: newBoards,
+        boards: boardsCopy,
       };
     });
     setValue('toDo', '');

@@ -35,9 +35,9 @@ function CreateBoardFrom() {
       todos: [],
     };
     setTodoBoards((oldBoards) => {
-      const newBoards = oldBoards.boards.concat(newBoard);
+      const boardsCopy = oldBoards.boards.concat(newBoard);
       return {
-        boards: newBoards,
+        boards: boardsCopy,
       };
     });
     setValue('boardTitle', '');

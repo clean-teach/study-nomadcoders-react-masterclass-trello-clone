@@ -59,11 +59,11 @@ function Board({ currentBoard }: IBoardProps) {
       )
     ) {
       setTodoBoards((oldBoards) => {
-        const newBoards = oldBoards.boards.filter(
+        const boardsCopy = oldBoards.boards.filter(
           (board) => board.id !== currentBoard.id,
         );
         return {
-          boards: newBoards,
+          boards: boardsCopy,
         };
       });
     }

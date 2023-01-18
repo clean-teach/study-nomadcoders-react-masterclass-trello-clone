@@ -36,9 +36,9 @@ function ReactBeautifulDndArea() {
 
     if (!destination) return;
     if (destination?.droppableId === source.droppableId) {
+      console.log(destination?.droppableId);
       // same board movement.
       setToDoBoards((allBoards) => {
-        // console.log({ ...allBoards });
         const boardCopy = [...allBoards[source.droppableId]];
         const taskObj = boardCopy[source.index];
         boardCopy.splice(source.index, 1);
