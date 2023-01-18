@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { toDoBoardState } from '../atoms/atoms';
 import Board from './Board';
 import CreateBoardFrom from './CreateBoardFrom';
 import DeleteCardArea from './DeleteCardArea';
+import handleDragEnd from '../hooks/handleDragEnd';
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,56 +31,12 @@ const Boards = styled.div`
 
 function ReactBeautifulDndArea() {
   const [toDoBoards, setToDoBoards] = useRecoilState(toDoBoardState);
-  const onDragEnd = (info: DropResult) => {
-    // console.log(info);
-    const { source, destination } = info;
-
-    if (!destination) return;
-    if (destination?.droppableId === source.droppableId) {
-      // same board movement.
-      const currentBoard = toDoBoards.boards.find(
-        (board) => board.title === destination?.droppableId,
-      );
-      const currentTodos = currentBoard?.todos;
-      if (currentTodos) {
-        const todosCopy = [...currentTodos];
-        const teskObj = todosCopy[source.index];
-        todosCopy.splice(source.index, 1);
-        todosCopy.splice(destination.index, 0, teskObj);
-        const boardCopy = {
-          id: currentBoard.id,
-          title: currentBoard.title,
-          todos: todosCopy,
-        };
-        const boardsCopy = toDoBoards.boards.map((board) =>
-          board.id === currentBoard.id ? boardCopy : board,
-        );
-
-        setToDoBoards({
-          boards: boardsCopy,
-        });
-      }
-    }
-    if (destination?.droppableId !== source.droppableId) {
-      // cross board movement
-      setToDoBoards((allBoards) => {
-        const sourceBoardCopy = [...allBoards[source.droppableId]];
-        const taskObj = sourceBoardCopy[source.index];
-        const destinationBoardCopy = [...allBoards[destination.droppableId]];
-        sourceBoardCopy.splice(source.index, 1);
-        destinationBoardCopy.splice(destination?.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: sourceBoardCopy,
-          [destination.droppableId]: destinationBoardCopy,
-        };
-      });
-    }
-  };
 
   return (
     <>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext
+        onDragEnd={(info) => handleDragEnd(info, { toDoBoards, setToDoBoards })}
+      >
         <Wrapper>
           <CreateBoardFrom />
           <Boards>

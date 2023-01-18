@@ -10,7 +10,7 @@ export interface IBoard {
   title: string;
   todos: ITodo[];
 }
-interface IBoards {
+export interface IBoards {
   [key: string]: IBoard[];
 }
 
