@@ -61,6 +61,7 @@ function Board({ currentBoard }: IBoardProps) {
                 index={index}
                 toDoId={toDo.id}
                 toDoText={toDo.text}
+                currentBoard={currentBoard}
               />
             ))}
             {magic.placeholder}
