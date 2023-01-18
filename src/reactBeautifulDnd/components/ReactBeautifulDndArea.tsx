@@ -36,20 +36,29 @@ function ReactBeautifulDndArea() {
 
     if (!destination) return;
     if (destination?.droppableId === source.droppableId) {
-      console.log(destination?.droppableId);
       // same board movement.
-      setToDoBoards((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]];
-        const taskObj = boardCopy[source.index];
-        boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination?.index, 0, taskObj);
-        // console.log(boardCopy);
-        // console.log(taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: boardCopy,
+      const currentBoard = toDoBoards.boards.find(
+        (board) => board.title === destination?.droppableId,
+      );
+      const currentTodos = currentBoard?.todos;
+      if (currentTodos) {
+        const todosCopy = [...currentTodos];
+        const teskObj = todosCopy[source.index];
+        todosCopy.splice(source.index, 1);
+        todosCopy.splice(destination.index, 0, teskObj);
+        const boardCopy = {
+          id: currentBoard.id,
+          title: currentBoard.title,
+          todos: todosCopy,
         };
-      });
+        const boardsCopy = toDoBoards.boards.map((board) =>
+          board.id === currentBoard.id ? boardCopy : board,
+        );
+
+        setToDoBoards({
+          boards: boardsCopy,
+        });
+      }
     }
     if (destination?.droppableId !== source.droppableId) {
       // cross board movement
