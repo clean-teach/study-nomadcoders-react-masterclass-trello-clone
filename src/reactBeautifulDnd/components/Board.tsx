@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DragabbleCard from './DragabbleCard';
@@ -5,6 +6,7 @@ import { toDoBoardState } from '../atoms/atoms';
 import CreateCardForm from './CreateCardForm';
 import { useSetRecoilState } from 'recoil';
 import { IAreaProps, IBoard } from '../types/types';
+import EditBoardTitle from './EditBoardTitle';
 
 const Wrapper = styled.div`
   padding-top: 10px;
@@ -49,6 +51,7 @@ interface IBoardProps {
 
 function Board({ currentBoard, index }: IBoardProps) {
   const setTodoBoards = useSetRecoilState(toDoBoardState);
+  const [isEditableBoardTitle, setIsEditableBoardTitle] = useState(false);
   const handleDeleteBoard = () => {
     if (
       window.confirm(
@@ -75,7 +78,6 @@ function Board({ currentBoard, index }: IBoardProps) {
         ...currentBoard,
         todos: [],
       };
-      console.log(boardCopy);
       setTodoBoards((oldBoards) => {
         const boardsCopy = oldBoards.boards.map((board) =>
           board.id === currentBoard.id ? boardCopy : board,
@@ -86,6 +88,9 @@ function Board({ currentBoard, index }: IBoardProps) {
       });
     }
   };
+  const handleToggleEditToBoardTitle = () => {
+    setIsEditableBoardTitle((current) => !current);
+  };
 
   return (
     <Draggable draggableId={currentBoard.id + ''} index={index}>
@@ -95,8 +100,22 @@ function Board({ currentBoard, index }: IBoardProps) {
           {...magic.dragHandleProps}
           {...magic.draggableProps}
         >
-          <Title>{currentBoard.title}</Title>
-          <ButtonDelete onClick={handleDeleteBoard}>❌</ButtonDelete>
+          {isEditableBoardTitle ? (
+            <EditBoardTitle
+              currentBoard={currentBoard}
+              handleToggleEditToBoardTitle={handleToggleEditToBoardTitle}
+            />
+          ) : (
+            <>
+              <Title>{currentBoard.title}</Title>
+              <button title="제목 수정" onClick={handleToggleEditToBoardTitle}>
+                ✏
+              </button>
+            </>
+          )}
+          <ButtonDelete title="삭제" onClick={handleDeleteBoard}>
+            ❌
+          </ButtonDelete>
           <CreateCardForm currentBoard={currentBoard} />
           <button onClick={handleDeleteAllTodos}>전체 삭제</button>
           <Droppable droppableId={currentBoard.title}>

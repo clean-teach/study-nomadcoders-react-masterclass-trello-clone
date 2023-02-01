@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { toDoBoardState } from '../atoms/atoms';
 import { IBoard } from '../types/types';
+import EditTodo from './EditTodo';
 
 const Card = styled.div<{ isDragging: boolean }>`
   border-radius: 5px;
@@ -29,6 +30,8 @@ function DragabbleCard({
   currentBoard,
 }: IDragabbleCardProps) {
   const setTodoBoard = useSetRecoilState(toDoBoardState);
+  const [isEditable, setIsEditable] = useState(false);
+
   const handleDeleteCard = () => {
     if (window.confirm('정말 삭제 하시겠습니까?')) {
       setTodoBoard((oldTodos) => {
@@ -51,6 +54,10 @@ function DragabbleCard({
     }
   };
 
+  const handleToggleEditMode = () => {
+    setIsEditable((current) => !current);
+  };
+
   return (
     <Draggable draggableId={toDoId + ''} index={index}>
       {(magic, snapshot) => (
@@ -60,8 +67,24 @@ function DragabbleCard({
           {...magic.dragHandleProps}
           {...magic.draggableProps}
         >
-          {toDoText}
-          <button onClick={handleDeleteCard}>❌</button>
+          {isEditable ? (
+            <EditTodo
+              handleToggleEditMode={handleToggleEditMode}
+              toDoText={toDoText}
+              currentBoard={currentBoard}
+              toDoId={toDoId}
+            />
+          ) : (
+            <>
+              {toDoText}
+              <button title="수정" onClick={handleToggleEditMode}>
+                ✏
+              </button>
+              <button title="삭제" onClick={handleDeleteCard}>
+                ❌
+              </button>
+            </>
+          )}
         </Card>
       )}
     </Draggable>
