@@ -65,6 +65,27 @@ function Board({ currentBoard, index }: IBoardProps) {
       });
     }
   };
+  const handleDeleteAllTodos = () => {
+    if (
+      window.confirm(
+        '해당 보드 내의 모든 할 일이 삭제됩니다. 정말 삭제 하시겠습니까?',
+      )
+    ) {
+      const boardCopy = {
+        ...currentBoard,
+        todos: [],
+      };
+      console.log(boardCopy);
+      setTodoBoards((oldBoards) => {
+        const boardsCopy = oldBoards.boards.map((board) =>
+          board.id === currentBoard.id ? boardCopy : board,
+        );
+        return {
+          boards: boardsCopy,
+        };
+      });
+    }
+  };
 
   return (
     <Draggable draggableId={currentBoard.id + ''} index={index}>
@@ -77,6 +98,7 @@ function Board({ currentBoard, index }: IBoardProps) {
           <Title>{currentBoard.title}</Title>
           <ButtonDelete onClick={handleDeleteBoard}>❌</ButtonDelete>
           <CreateCardForm currentBoard={currentBoard} />
+          <button onClick={handleDeleteAllTodos}>전체 삭제</button>
           <Droppable droppableId={currentBoard.title}>
             {(magic, info) => (
               <Area
